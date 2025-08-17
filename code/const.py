@@ -1,5 +1,5 @@
 import pygame
-from pygame.examples.grid import WINDOW_HEIGHT
+
 
 # C
 COLOR_YELLOW = (255, 255, 0)
@@ -19,6 +19,20 @@ ENTITY_SPEED = {
     'player2': 3,
     'Enemy1' : 2,
     'Enemy2' : 1,
+}
+
+ENTITY_HEALTH = {
+    'Level1Bg0': 999,
+    'Level1Bg1': 999,
+    'Level1Bg2': 999,
+    'Level1Bg3': 999,
+    'Level1Bg4': 999,
+    'Level1Bg5': 999,
+    'Level1Bg6': 999,
+    'player1': 300,
+    'player2': 300,
+    'Enemy1': 40,
+    'Enemy2': 60,
 }
 
 # M

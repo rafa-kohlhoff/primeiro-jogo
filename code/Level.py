@@ -10,6 +10,7 @@ from pygame.font import Font
 
 from code.Entity import Entity
 from code.EntityFactory import EntityFactory
+from code.EntityMediator import EntityMediator
 from code.const import COLOR_WHITE, WIN_HEIGHT, MENU_OPTION, EVENT_ENEMY, SPAWN_TIME
 
 
@@ -41,14 +42,24 @@ class Level:
                     pygame.quit()
                     sys.exit()
                 if event.type == EVENT_ENEMY:
-                    choice = random.choice(('Enemy1', 'Enemy2'))
-                    self.entity_list.append(EntityFactory.get_entity(choice))
+                    # 'choice' is a built-in function, avoid shadowing it.
+                    # Renamed variable to 'chosen_enemy'
+                    chosen_enemy = random.choice(('Enemy1', 'Enemy2'))
+                    self.entity_list.append(EntityFactory.get_entity(chosen_enemy))
 
             self.level_text(14, f'{self.name} - Timeout: {self.timeout / 1000:.1f}s', COLOR_WHITE, (10, 5))
             self.level_text(14, f'fps: {clock.get_fps():.0f}', COLOR_WHITE, (10, WIN_HEIGHT - 35))
             self.level_text(14, f'entidades: {len(self.entity_list)}', COLOR_WHITE, (10, WIN_HEIGHT - 20))
             pygame.display.flip()
-            pass
+
+            # Ensure the EntityMediator.verify_collision method (if it modifies health)
+            # is called before verifying health to ensure consistent state.
+            EntityMediator.verify_collision(entity_list=self.entity_list)
+
+            # This is the crucial change: reassign the entity_list
+            # with the new list returned by verify_health.
+            self.entity_list = EntityMediator.verify_health(entity_list=self.entity_list)
+
 
     def level_text(self, text_size: int, text: str, text_color: tuple, text_pos: tuple):
         text_font: Font = pygame.font.SysFont(name="Lucida Sans Typewriter", size=text_size)
